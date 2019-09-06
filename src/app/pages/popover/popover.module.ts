@@ -1,17 +1,16 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
 
 import { IonicModule } from '@ionic/angular';
 
-import { RegisterPage } from './register.page';
-import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { PopoverPage } from './popover.page';
 
 const routes: Routes = [
   {
     path: '',
-    component: RegisterPage
+    component: PopoverPage
   }
 ];
 
@@ -19,11 +18,9 @@ const routes: Routes = [
   imports: [
     CommonModule,
     FormsModule,
-    ReactiveFormsModule,
     IonicModule,
-    AngularFirestoreModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [RegisterPage]
+  declarations: [PopoverPage],
 })
-export class RegisterPageModule {}
+export class PopoverPageModule {}

@@ -18,6 +18,7 @@ import { AngularFirestoreModule, FirestoreSettingsToken } from '@angular/fire/fi
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthGuard } from '@angular/fire/auth-guard';
 import { AngularFireDatabaseModule } from '@angular/fire/database';
+import { PopoverPageModule } from './pages/popover/popover.module';
 
 // Initial Firebase with ionicApp
 @NgModule({
@@ -31,7 +32,8 @@ import { AngularFireDatabaseModule } from '@angular/fire/database';
     AngularFireAuthModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFirestoreModule,
-    AngularFireDatabaseModule
+    AngularFireDatabaseModule,
+    PopoverPageModule
   ],
   providers: [
     StatusBar,

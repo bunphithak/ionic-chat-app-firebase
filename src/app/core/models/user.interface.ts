@@ -6,4 +6,5 @@ export interface UserInterface extends AuthInterface {
     fullName?: string;
     phone?: string;
     address?: string;
+    img?: string;
 }

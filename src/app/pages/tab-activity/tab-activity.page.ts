@@ -6,6 +6,7 @@ import { AlertController, NavController } from '@ionic/angular';
 import { ChatService } from 'src/app/core/services/chat.service';
 import { UserInterface } from 'src/app/core/models/user.interface';
 import { AuthenticationService } from 'src/app/core/services/authentication.service';
+import * as firebase from 'firebase';
 
 @Component({
   selector: 'app-tab-activity',
@@ -32,9 +33,10 @@ export class TabActivityPage implements OnInit {
     this.userInfo = await this.authService.getUser();
   }
 
-  clickJoinChat(id) {
+  async clickJoinChat(id) {
     this.activityServers.getActivityDetail(id).subscribe(async activity => {
-      if (activity) {
+      const checkJoinGroup = await this.chatService.checkStatusJoin(this.userInfo.uid, activity.id);
+      if (activity && checkJoinGroup) {
         const toast = await this.alertController.create({
           header: 'ต้องการเข้าร่วมกิจกรรม?',
           message: `ท่านต้องการเข้าร่วมกิจกรรม ${activity.name} ?`,
@@ -53,19 +55,26 @@ export class TabActivityPage implements OnInit {
           ]
         });
         await toast.present();
+      } else {
+        this.navCtrl.navigateForward(`/members/tabs/tabActivity/chat/${activity.id}`);
       }
     });
   }
 
   joinGroup(activity) {
+    // tslint:disable-next-line:no-construct
+    const date = new String(new Date());
     const data = {
       specialMessage: true,
       message: `${this.userInfo.fullName} has joined the room`,
       groupID: activity.id,
       joinBy: this.userInfo.uid,
-      status: 'active'
+      status: 'active',
+      // createAt: date.valueOf()
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
     };
     this.chatService.joinGroup(data);
     this.navCtrl.navigateForward(`/members/tabs/tabActivity/chat/${activity.id}`);
+    this.chatService.updateStatusJoin(this.userInfo.uid, activity.id);
   }
 }

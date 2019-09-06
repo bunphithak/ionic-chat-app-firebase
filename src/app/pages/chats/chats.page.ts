@@ -4,6 +4,9 @@ import { ActivatedRoute } from '@angular/router';
 import { ChatService } from 'src/app/core/services/chat.service';
 import { UserInterface } from 'src/app/core/models/user.interface';
 import { AuthenticationService } from 'src/app/core/services/authentication.service';
+import * as firebase from 'firebase';
+import { PopoverController } from '@ionic/angular';
+import { PopoverPage } from '../popover/popover.page';
 
 @Component({
   selector: 'app-chats',
@@ -13,20 +16,15 @@ import { AuthenticationService } from 'src/app/core/services/authentication.serv
 export class ChatsPage implements OnInit {
   chat: string;
   activity;
-  data: any = {
-    receiverid: '',
-    title: 'title',
-    receiveridimg: ''
-  };
-  sender: any = {};
-  conversationList: Array<any> = [];
-  isChatting = false;
+  activityID;
   userInfo: UserInterface;
+  dataChat: any = [];
   constructor(
     private activityServers: ActivityService,
     private activatedRoute: ActivatedRoute,
     private chatService: ChatService,
-    private authService: AuthenticationService
+    private authService: AuthenticationService,
+    public popoverController: PopoverController
   ) { }
 
   ngOnInit() {
@@ -36,6 +34,7 @@ export class ChatsPage implements OnInit {
     }, 400);
 
     const id = this.activatedRoute.snapshot.paramMap.get('id');
+    this.activityID = id;
     if (id) {
       this.getActivity(id);
       this.getChat(id);
@@ -43,13 +42,26 @@ export class ChatsPage implements OnInit {
     }
   }
 
+  async presentPopover(ev: any) {
+    const popover = await this.popoverController.create({
+      component: PopoverPage,
+      event: ev,
+      translucent: true,
+      componentProps: {message: this.activityID}
+    });
+    return await popover.present();
+  }
+
   async getCurrentUser() {
     this.userInfo = await this.authService.getUser();
   }
 
   async getChat(id) {
-    const dataChat = await this.chatService.getChat(id);
-    console.log('dataChat======>', dataChat);
+    const response = this.chatService.getChat();
+    response.subscribe(
+      (val) => this.dataChat = val.filter(v => v['groupID'] === id),
+      (error) => error
+    );
   }
 
   getActivity(id) {
@@ -61,7 +73,16 @@ export class ChatsPage implements OnInit {
   }
 
   sendMessage(e) {
+    const data = {
+      specialMessage: true,
+      message: this.chat,
+      groupID: this.activityID,
+      joinBy: this.userInfo.uid,
+      status: 'active',
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+    };
     if (this.chat) {
+      this.chatService.sendMessage(data);
       this.chat = '';
     }
   }
