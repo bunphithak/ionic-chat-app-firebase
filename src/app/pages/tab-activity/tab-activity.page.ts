@@ -70,6 +70,7 @@ export class TabActivityPage implements OnInit {
       groupID: activity.id,
       joinBy: this.userInfo.uid,
       status: 'active',
+      imgBy: this.userInfo.img,
       // createAt: date.valueOf()
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
     };

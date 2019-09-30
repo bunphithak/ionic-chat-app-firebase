@@ -39,6 +39,7 @@ export class PopoverPage implements OnInit {
       groupID:  this.navParams.get('message'),
       joinBy: this.userInfo.uid,
       status: 'inactive',
+      imgBy: this.userInfo.img,
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
     };
     this.chatService.leftGroup(data);

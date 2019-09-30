@@ -23,7 +23,7 @@
   <div id="box" class="chat-container" *ngIf="dataChat?.length > 0">
     <div *ngFor="let item of dataChat">
       <!-- //me -->
-      <div *ngIf="item?.joinBy !== userInfo?.uid">
+      <div *ngIf="item?.joinBy === userInfo?.uid">
         <div class="time-me">{{item?.createAt | moment}}</div>
         <div class="arrow-right"></div>
         <div class="box-me">
@@ -37,10 +37,10 @@
 
       <!-- //other -->
 
-      <div *ngIf="item?.joinBy === userInfo?.uid">
+      <div *ngIf="item?.joinBy !== userInfo?.uid">
         <div class="time-other">{{item?.createAt | moment}}</div>
         <div>
-          <img class="avatar" [src]="userInfo?.img" alt="avatar">
+          <img  class="avatar" [src]="item?.imgBy" alt="avatar">
         </div>
         <div class="arrow-left"></div>
         <div class="box-other">

@@ -47,7 +47,7 @@ export class ChatsPage implements OnInit {
       component: PopoverPage,
       event: ev,
       translucent: true,
-      componentProps: {message: this.activityID}
+      componentProps: { message: this.activityID }
     });
     return await popover.present();
   }
@@ -79,6 +79,7 @@ export class ChatsPage implements OnInit {
       groupID: this.activityID,
       joinBy: this.userInfo.uid,
       status: 'active',
+      imgBy: this.userInfo.img,
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
     };
     if (this.chat) {
@@ -86,5 +87,4 @@ export class ChatsPage implements OnInit {
       this.chat = '';
     }
   }
-
 }
